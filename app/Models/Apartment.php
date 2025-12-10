@@ -11,6 +11,7 @@ class Apartment extends Model
         'city_id',
         'description',
         'address',
+        'size',
         'num_of_rooms',
         'price',
         'apartment_images',

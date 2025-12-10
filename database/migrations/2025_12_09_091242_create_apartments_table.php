@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
             $table->string('description');
             $table->string('address');
+            $table->string('size');
             $table->integer('num_of_rooms');
             $table->integer('price');
             $table->string('apartment_images');

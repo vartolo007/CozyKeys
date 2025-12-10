@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->integer('phone')->nullable();
+            $table->string('phone');
             $table->string('password');
-            $table->date('date_of _birth');
+            $table->date('date_of_birth')->nullable();
             $table->string('profile_image')->nullable();
             $table->string('id_image')->nullable();
             $table->enum('user_type', ['admin', 'tenant', 'owner']);
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

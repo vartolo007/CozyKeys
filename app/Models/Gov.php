@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Gov extends Model
 {
     protected $fillable = [
-        'city_id',
-        'name',
+
+        'name'
     ];
 }

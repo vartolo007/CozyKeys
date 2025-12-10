@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('govs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();
         });
