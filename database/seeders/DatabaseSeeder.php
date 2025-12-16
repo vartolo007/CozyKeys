@@ -10,6 +10,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([govsyseeder::class, cityseeder::class]);
+        $this->call([govsyseeder::class, cityseeder::class, AdminSeeder::class]);
     }
 }

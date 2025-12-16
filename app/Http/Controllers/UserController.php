@@ -35,8 +35,8 @@ class UserController extends Controller
             'user_type' => $request->user_type,
             'status' => 'pending',
         ]);
-        return ResponseHelper::jsonResponse($user, 'User registered successfully', 201);
-        // return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
+        return ResponseHelper::jsonResponse($user, 'User registered successfully , awaitting admin approval', 201);
+        // return response()->json(['message' => 'User registered successfully , awaitting admin approval', 'user' => $user], 201);
     }
 
 
