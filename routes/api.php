@@ -50,7 +50,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings', [BookingController::class, 'store']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/apartments', [ApartmentController::class, 'store']);
-});
 
