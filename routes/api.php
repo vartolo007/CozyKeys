@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,3 +44,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/admin/statistics', [AdminController::class, 'getStatistics']);
 });
+
+// مسار إنشاء الحجز (يتطلب مصادقة)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/bookings', [BookingController::class, 'store']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/apartments', [ApartmentController::class, 'store']);
+});
+

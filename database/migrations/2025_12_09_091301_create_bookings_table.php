@@ -17,9 +17,10 @@ return new class extends Migration
             $table->foreignId('apartment_id')->constrained('apartments')->cascadeOnDelete();
             $table->date('check_in_date');
             $table->date('check_out_date');
-            $table->enum('booking_status', ['approved', 'rejaected'])->default('approved');
+            $table->enum('booking_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->float('rating')->nullable();
             $table->timestamps();
+            $table->index(['apartment_id', 'check_in_date', 'check_out_date'], 'bookings_apart_dates_idx');
         });
     }
 
