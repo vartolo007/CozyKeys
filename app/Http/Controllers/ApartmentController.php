@@ -86,4 +86,52 @@ class ApartmentController extends Controller
             'message' => 'added suscessfully'
         ], 201);
     }
+
+    public function filterApartments(Request $request)
+    {
+        $query = Apartment::where('apartment_status', 'available');
+
+        // فلترة حسب المحافظة (من جدول المدن)
+        if ($request->has('gov_id')) {
+            $query->whereHas('city', function ($q) use ($request) {
+                $q->where('gov_id', $request->gov_id);
+            });
+        }
+
+        // فلترة حسب المدينة
+        if ($request->has('city_id')) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        // فلترة حسب السعر
+        if ($request->has('min_price') && $request->has('max_price')) {
+            $query->whereBetween('price', [$request->min_price, $request->max_price]);
+        }
+
+        // فلترة حسب الحجم (features)
+        if ($request->has('size')) {
+            foreach ($request->size as $size) {
+                $query->whereJsonContains('size', $$size);
+            }
+        }
+
+        $apartments = $query->get([
+            'id',
+            'city_id',
+            'description',
+            'address',
+            'size',
+            'num_of_rooms',
+            'price',
+            'apartment_images',
+            'apartment_status',
+
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $apartments,
+            'message' => 'Filtered apartments fetched successfully'
+        ]);
+    }
 }

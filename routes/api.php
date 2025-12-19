@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/apartments', [ApartmentController::class, 'addApartment']);
 
-
+    Route::get('/apartments/filter', [ApartmentController::class, 'filterApartments']);
 
     //admin routes
 

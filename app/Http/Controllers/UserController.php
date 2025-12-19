@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\ReigisterRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -10,20 +12,8 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 
 {
-    public function register(Request $request)
+    public function register(ReigisterRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:10|unique:users,phone',
-            'password' => 'required|string|min:8|confirmed',
-            'date_of_birth' => 'required|date',
-            'profile_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'id_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'user_type' => 'required|in:admin,tenant,owner',
-        ]);
-
-
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -41,25 +31,17 @@ class UserController extends Controller
 
 
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'phone' => 'required|string|max:10',
-            'password' => 'required|string|min:8',
-        ]);
-
         if (!Auth::attempt($request->only('phone', 'password'))) {
-            return response()->json(['message' => 'Invalid phone or password'], 401);
+            return ResponseHelper::jsonResponse(null, 'Invalid phone or password', 401);
         }
 
         $user = User::where('phone', $request->phone)->firstOrFail();
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Login successful',
-            'token' => $token,
-            'user' => $user
-        ], 200);
+        return ResponseHelper::jsonResponse(['token' => $token, 'user' => $user], 'Login successful', 200);
     }
 
 
@@ -68,8 +50,6 @@ class UserController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
-            'message' => 'Logout successful'
-        ]);
+        return ResponseHelper::jsonResponse(null, 'Logged out successfully', 200);
     }
 }

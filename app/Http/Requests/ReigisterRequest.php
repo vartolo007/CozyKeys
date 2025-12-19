@@ -11,7 +11,7 @@ class ReigisterRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class ReigisterRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:10|unique:users,phone',
+            'password' => 'required|string|min:8|confirmed',
+            'date_of_birth' => 'required|date',
+            'profile_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'id_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'user_type' => 'required|in:admin,tenant,owner',
         ];
     }
 }
