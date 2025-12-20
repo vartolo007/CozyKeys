@@ -15,7 +15,7 @@ class StoreApartmentReviewRequest extends FormRequest
     {
         return [
             'booking_id' => 'required|exists:bookings,id',
-            'rating' => 'required|integer|min:1|max:5',
+            'rating' => 'required|float|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
         ];
     }
