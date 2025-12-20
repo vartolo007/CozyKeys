@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('num_of_rooms');
             $table->integer('price');
             $table->string('apartment_images');
-            $table->enum('apartment_status', ['available', 'booked'])->default('available');
+            $table->enum('apartment_status', ['available', 'booking', 'unavailable'])->default('available');
             $table->timestamps();
         });
     }

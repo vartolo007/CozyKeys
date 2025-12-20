@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('check_in_date');
             $table->date('check_out_date');
             $table->enum('booking_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('request_type', ['none', 'edit', 'cancel'])->default('none');
+            $table->json('edit_data')->nullable();
             $table->float('rating')->nullable();
             $table->timestamps();
             $table->index(['apartment_id', 'check_in_date', 'check_out_date'], 'bookings_apart_dates_idx');

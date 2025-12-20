@@ -20,21 +20,21 @@ class AdminController extends BaseController
             if (!$user) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'يجب تسجيل الدخول أولاً'
+                    'message' => 'You must log in first'
                 ], 401);
             }
 
             if ($user->user_type !== 'admin') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'غير مصرح لك. للأدمن فقط!'
+                    'message' => 'You aren`t authorized. Admins only!'
                 ], 403);
             }
 
             if ($user->status !== 'approved') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'حساب الأدمن غير مفعل'
+                    'message' => 'The admin account is not activated'
                 ], 403);
             }
 
@@ -52,7 +52,7 @@ class AdminController extends BaseController
         return response()->json([
             'success' => true,
             'data' => $pendingUsers,
-            'message' => 'تم جلب طلبات التسجيل المعلقة'
+            'message' => 'Pending registration requests have been fetched'
         ]);
     }
 
@@ -66,7 +66,7 @@ class AdminController extends BaseController
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'المستخدم غير موجود'
+                'message' => 'User not found'
             ], 404);
         }
 
@@ -75,7 +75,7 @@ class AdminController extends BaseController
 
         return response()->json([
             'success' => true,
-            'message' => 'تمت الموافقة على المستخدم: ' . $user->first_name . ' ' . $user->last_name,
+            'message' => 'User approved: ' . $user->first_name . ' ' . $user->last_name,
             'user' => $user
         ]);
     }
@@ -90,7 +90,7 @@ class AdminController extends BaseController
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'المستخدم غير موجود'
+                'message' => 'The user does not exist'
             ], 404);
         }
 
@@ -99,7 +99,7 @@ class AdminController extends BaseController
 
         return response()->json([
             'success' => true,
-            'message' => 'تم رفض المستخدم: ' . $user->first_name . ' ' . $user->last_name,
+            'message' => 'User was rejected: ' . $user->first_name . ' ' . $user->last_name,
             'user' => $user
         ]);
     }
@@ -114,7 +114,7 @@ class AdminController extends BaseController
         return response()->json([
             'success' => true,
             'data' => $users,
-            'message' => 'تم جلب جميع المستخدمين'
+            'message' => 'All users have been retrieved'
         ]);
     }
 
@@ -128,7 +128,7 @@ class AdminController extends BaseController
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'المستخدم غير موجود'
+                'message' => 'The user does not exist'
             ], 404);
         }
 
@@ -136,7 +136,7 @@ class AdminController extends BaseController
         if ($user->user_type === 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'لا يمكن حذف حساب الأدمن'
+                'message' => 'The admin account cannot be deleted'
             ], 403);
         }
 
@@ -145,7 +145,7 @@ class AdminController extends BaseController
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف المستخدم: ' . $userName
+            'message' => 'The user has been deleted: ' . $userName
         ]);
     }
 
@@ -178,7 +178,7 @@ class AdminController extends BaseController
                     'rejected' => $rejectedUsers
                 ]
             ],
-            'message' => 'إحصائيات النظام'
+            'message' => 'System statistics'
         ]);
     }
 }

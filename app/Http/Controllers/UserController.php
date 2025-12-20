@@ -39,10 +39,16 @@ class UserController extends Controller
 
         $user = User::where('phone', $request->phone)->firstOrFail();
 
+        // تحقق من حالة الحساب
+        if ($user->status !== 'approved') {
+            return ResponseHelper::jsonResponse(null, 'Your account is not approved yet', 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return ResponseHelper::jsonResponse(['token' => $token, 'user' => $user], 'Login successful', 200);
     }
+
 
 
 

@@ -18,8 +18,8 @@ class AdminSeeder extends Seeder
             'date_of_birth' => '2005-01-01',
             'user_type' => 'admin',
             'status' => 'approved',
-            'profile_image' => 'admin.jpg',
-            'id_image' => 'admin_id.jpg',
+            'profile_image' => 'admin.png',
+            'id_image' => 'admin_id.png',
         ]);
     }
 }

@@ -53,7 +53,7 @@ class ApartmentController extends Controller
         if ($user->user_type != 'owner') {
             return response()->json([
                 'success' => false,
-                'message' => 'فقط المالك يمكنه إضافة شقق'
+                'message' => 'Only the owner can add apartments'
             ], 403);
         }
 
