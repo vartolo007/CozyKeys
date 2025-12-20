@@ -10,6 +10,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([govsyseeder::class, cityseeder::class, AdminSeeder::class]);
+        $this->call([
+            GovsSeeder::class,
+            CitySeeder::class,
+            AdminSeeder::class,
+            UserSeeder::class,
+            ApartmentSeeder::class
+        ]);
     }
 }
