@@ -7,29 +7,29 @@ use App\Http\Controllers\ApartmentReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// register routes
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+//الريجستر وتسجيل الدخول والخروج
 Route::post('/register', [App\Http\Controllers\UserController::class, 'register']);
 Route::post('/login', [App\Http\Controllers\UserController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\UserController::class, 'logout'])->middleware('auth:sanctum');
 
-// apartment + admin routes
 Route::middleware('auth:sanctum')->group(function () {
 
-    // 🏠 شقق
+    //  شقق
     Route::get('/apartments', [ApartmentController::class, 'getAllApartments']);
     Route::get('/apartments/{apartment}', [ApartmentController::class, 'getApartmentDetails']);
     Route::post('/apartments', [ApartmentController::class, 'addApartment']);
-    Route::get('/apartments/filter', [ApartmentController::class, 'filterApartments']);
+    Route::post('/apartments/filter', [ApartmentController::class, 'filterApartments']);
 
-    // ⭐ تقييمات الشقق
+    //  تقييمات الشقق
     Route::post('/apartments/{apartment}/reviews', [ApartmentReviewController::class, 'Evaluation']);
     Route::get('/apartments/{apartment}/reviews', [ApartmentReviewController::class, 'EvaluationPresentation']);
 
-    // 👨‍💼 مسارات الأدمن
+    //  مسارات الأدمن
     Route::get('/admin/pending-registrations', [AdminController::class, 'getPendingRegistrations']);
     Route::put('/admin/users/approve/{id}', [AdminController::class, 'approveUser']);
     Route::put('/admin/users/reject/{id}', [AdminController::class, 'rejectUser']);
@@ -38,7 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/statistics', [AdminController::class, 'getStatistics']);
 });
 
-// 🗓️ حجوزات
 Route::middleware('auth:sanctum')->group(function () {
 
     //حجز شقة

@@ -8,7 +8,7 @@ class StoreApartmentReviewRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // ممكن تضيف تحقق إضافي إذا بدك
+        return true; 
     }
 
     public function rules(): array

@@ -35,18 +35,7 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     *
-     *
-     * شرط التداخل: new.check_in < existing.check_out AND new.check_out > existing.check_in
-     *
-     * @param int $apartmentId
-     * @param string $checkIn
-     * @param string $checkOut
-     * @param array $statuses
-     * @param int|null $excludeId
-     * @return bool
-     */
+
     public static function hasOverlap(int $apartmentId, string $checkIn, string $checkOut, array $statuses = ['approved'], ?int $excludeId = null): bool
     {
         $query = self::where('apartment_id', $apartmentId)

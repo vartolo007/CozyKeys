@@ -9,9 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class AdminController extends BaseController
 {
-    /**
-     * إنشاء Middleware للتحقق من الأدمن
-     */
+    // للتحقق من الأدمن
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
@@ -42,9 +40,8 @@ class AdminController extends BaseController
         });
     }
 
-    /**
-     * عرض جميع طلبات التسجيل المعلقة
-     */
+    // عرض جميع طلبات التسجيل المعلقة
+
     public function getPendingRegistrations()
     {
         $pendingUsers = User::where('status', 'pending')->get();
@@ -56,9 +53,8 @@ class AdminController extends BaseController
         ]);
     }
 
-    /**
-     * الموافقة على تسجيل مستخدم
-     */
+    //الموافقة على تسجيل مستخدم
+
     public function approveUser($id)
     {
         $user = User::find($id);
@@ -80,9 +76,7 @@ class AdminController extends BaseController
         ]);
     }
 
-    /**
-     * رفض تسجيل مستخدم
-     */
+    // رفض تسجيل مستخدم
     public function rejectUser($id)
     {
         $user = User::find($id);
@@ -104,9 +98,7 @@ class AdminController extends BaseController
         ]);
     }
 
-    /**
-     * عرض جميع المستخدمين
-     */
+    // عرض جميع المستخدمين
     public function getAllUsers()
     {
         $users = User::all();
@@ -118,9 +110,7 @@ class AdminController extends BaseController
         ]);
     }
 
-    /**
-     * حذف مستخدم
-     */
+    // حذف مستخدم
     public function deleteUser($id)
     {
         $user = User::find($id);
@@ -132,7 +122,6 @@ class AdminController extends BaseController
             ], 404);
         }
 
-        // لا يمكن حذف الأدمن نفسه
         if ($user->user_type === 'admin') {
             return response()->json([
                 'success' => false,
@@ -149,9 +138,8 @@ class AdminController extends BaseController
         ]);
     }
 
-    /**
-     * عرض إحصائيات النظام
-     */
+    //عرض إحصائيات النظام
+
     public function getStatistics()
     {
         $totalUsers = User::count();

@@ -9,17 +9,18 @@ use Illuminate\Http\JsonResponse;
 
 class ApartmentReviewController extends Controller
 {
+
+    //دالة للتقييم للمستأجر
     public function Evaluation(StoreApartmentReviewRequest $request): JsonResponse
     {
         $data = $request->validated();
         $booking = Booking::findOrFail($data['booking_id']);
 
-        // تحقق أن المستخدم هو صاحب الحجز
+
         if ($booking->user_id !== $request->user()->id) {
             return response()->json(['message' => 'غير مسموح'], 403);
         }
 
-        // تحقق أن الحجز منتهي
         if ($booking->check_out_date > now()) {
             return response()->json(['message' => 'You cannot leave a review before the booking ends'], 400);
         }
@@ -38,7 +39,7 @@ class ApartmentReviewController extends Controller
         ]);
     }
 
-    // استعراض التقييمات لشقة معينة
+    // استعراض التقييمات لشقة حسب ال id
     public function EvaluationPresentation($apartmentId): JsonResponse
     {
         $reviews = ApartmentReview::where('apartment_id', $apartmentId)

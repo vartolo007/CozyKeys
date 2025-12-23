@@ -76,7 +76,7 @@ class ApartmentController extends Controller
             'size' => $request->size,
             'num_of_rooms' => $request->num_of_rooms,
             'price' => $request->price,
-            'apartment_images' => $request->file('apartment_images')->store('apartment', 'public'),
+            'apartment_images' =>'http://127.0.0.1:8000/storage/'. $request->file('apartment_images')->store('apartment', 'public'),
             'apartment_status' => 'available',
         ]);
 
@@ -89,29 +89,30 @@ class ApartmentController extends Controller
 
     public function filterApartments(Request $request)
     {
-        $query = Apartment::where('apartment_status', 'available');
+        $query = Apartment::query()
+            ->where('apartment_status', 'available')
+            ->with('city');
 
-        // فلترة حسب المحافظة (من جدول المدن)
-        if ($request->has('gov_id')) {
+        if ($request->filled('gov_id')) {
             $query->whereHas('city', function ($q) use ($request) {
                 $q->where('gov_id', $request->gov_id);
             });
         }
 
-        // فلترة حسب المدينة
-        if ($request->has('city_id')) {
+        if ($request->filled('city_id')) {
             $query->where('city_id', $request->city_id);
         }
 
-        // فلترة حسب السعر
-        if ($request->has('min_price') && $request->has('max_price')) {
-            $query->whereBetween('price', [$request->min_price, $request->max_price]);
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('price', [
+                $request->min_price,
+                $request->max_price
+            ]);
         }
 
-        // فلترة حسب الحجم (features)
-        if ($request->has('size')) {
+        if ($request->filled('size')) {
             foreach ($request->size as $size) {
-                $query->whereJsonContains('size', $$size);
+                $query->whereJsonContains('size', $size);
             }
         }
 
@@ -125,7 +126,6 @@ class ApartmentController extends Controller
             'price',
             'apartment_images',
             'apartment_status',
-
         ]);
 
         return response()->json([

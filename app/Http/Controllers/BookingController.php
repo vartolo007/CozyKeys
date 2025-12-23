@@ -11,9 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    /**
-     * إنشاء طلب حجز آمن مع منع التضارب (transaction + row lock).
-     */
+
+    //إنشاء طلب حجز آمن مع منع التضارب
     public function store(StoreBookingRequest $request)
     {
         $data = $request->validated();
@@ -47,9 +46,7 @@ class BookingController extends Controller
     }
 
 
-    /**
-     * استعراض الحجوزات الخاصة بشقق المالك
-     */
+    //استعراض الحجوزات الخاصة بشقق المالك
     public function ownerBookings()
     {
         $ownerId = Auth::id();
@@ -64,19 +61,18 @@ class BookingController extends Controller
         ]);
     }
 
-    /**
-     * موافقة المالك على الحجز
-     */
+
+    // موافقة المالك على الحجز
+
     public function approveBooking($id)
     {
         $booking = Booking::findOrFail($id);
 
-        // فقط المالك يوافق
+
         if (Auth::id() !== $booking->apartment->user_id) {
             return response()->json(['message' => 'Not allowed. Only the apartment owner can approve.'], 403);
         }
 
-        // منع الموافقة إذا يوجد تداخل مع approved
         if (Booking::hasOverlap(
             $booking->apartment_id,
             $booking->check_in_date,
@@ -88,20 +84,16 @@ class BookingController extends Controller
         }
 
         $booking->update(['booking_status' => 'approved']);
-        // تحديث حالة الشقة إلى booking
         $booking->apartment->update(['apartment_status' => 'booking']);
 
         return response()->json(['message' => 'The booking has been approved', 'booking' => $booking]);
     }
 
-    /**
-     * رفض الحجز من قبل المالك
-     */
+    //رفض الحجز من قبل المالك
     public function rejectBooking($id)
     {
         $booking = Booking::findOrFail($id);
 
-        // فقط المالك يرفض
         if (Auth::id() !== $booking->apartment->user_id) {
             return response()->json(['message' => 'Not allowed. Only the apartment owner can refuse'], 403);
         }
@@ -192,33 +184,27 @@ class BookingController extends Controller
         return response()->json(['message' => 'The request was denied']);
     }
 
-    /**
-     * تعديل الحجز من قبل المستأجر
-     */
+    // تعديل الحجز من قبل المستأجر
     public function update(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
 
-        // تأكد أن المستخدم هو صاحب الحجز
         if ($booking->user_id !== Auth::id()) {
             return response()->json(['message' => 'Not allowed'], 403);
         }
 
-        // تعديل الحقول المطلوبة
         $booking->request_type = 'edit';
         $booking->edit_data = json_encode([
             'check_in_date' => $request->check_in_date,
             'check_out_date' => $request->check_out_date
         ]);
 
-        $booking->save(); // 🔥 هذا هو السطر اللي ينفّذ التعديل فعليًا
+        $booking->save();
 
         return response()->json(['message' => 'The modification request has been sent to the owner.']);
     }
 
-    /**
-     * إلغاء الحجز من قبل المستأجر
-     */
+    // إلغاء الحجز من قبل المستأجر
     public function destroy(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
@@ -227,7 +213,7 @@ class BookingController extends Controller
             return response()->json(['message' => 'Not allowed'], 403);
         }
 
-        // إرسال طلب إلغاء
+
         $booking->update([
             'request_type' => 'cancel'
         ]);
