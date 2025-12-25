@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //  تقييمات الشقق
     Route::post('/apartments/{apartment}/reviews', [ApartmentReviewController::class, 'Evaluation']);
     Route::get('/apartments/{apartment}/reviews', [ApartmentReviewController::class, 'EvaluationPresentation']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
 
     //  مسارات الأدمن
     Route::get('/admin/pending-registrations', [AdminController::class, 'getPendingRegistrations']);
@@ -40,9 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    //حجز شقة
-    Route::post('/bookings', [BookingController::class, 'store']);
-
     // عرض حجوزات شقق المالك
     Route::get('/owner/bookings', [BookingController::class, 'ownerBookings']);
 
@@ -51,12 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // رفض المالك
     Route::put('/bookings/{id}/reject', [BookingController::class, 'rejectBooking']);
-
-    // تعديل الطلب للمستأجر
-    Route::put('/bookings/{id}/request-edit', [BookingController::class, 'update']);
-
-    //حذف الطلب للمستأجر
-    Route::put('/bookings/{id}/request-cancel', [BookingController::class, 'destroy']);
 
     // عرض الطلبات للمالك
     Route::get('/owner/booking-requests', [BookingController::class, 'ownerRequests']);
@@ -69,4 +63,25 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //رفض الطلب للمالك(سواء للتعديل أو الإلغاء)
     Route::put('/bookings/{id}/reject-request', [BookingController::class, 'rejectRequest']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    //حجز شقة
+    Route::post('/bookings', [BookingController::class, 'store']);
+
+    // تعديل الطلب للمستأجر
+    Route::put('/bookings/{id}/request-edit', [BookingController::class, 'update']);
+
+    //حذف الطلب للمستأجر
+    Route::put('/bookings/{id}/request-cancel', [BookingController::class, 'destroy']);
+
+    //الطلبات الحالية
+    Route::get('/tenant/bookings/current', [BookingController::class, 'tenantCurrent']);
+
+    //الطلبات السابقة
+    Route::get('/tenant/bookings/past', [BookingController::class, 'tenantPast']);
+
+    //الطلبات الملغية
+    Route::get('/tenant/bookings/cancelled', [BookingController::class, 'tenantCancelled']);
 });

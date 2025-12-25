@@ -220,4 +220,44 @@ class BookingController extends Controller
 
         return response()->json(['message' => 'The cancellation request has been sent to the owner']);
     }
+
+    // الطلبات الحالية
+    public function tenantCurrent()
+    {
+        $tenantId = Auth::id();
+
+        $bookings = Booking::where('user_id', $tenantId)
+            ->whereIn('booking_status', ['pending', 'approved'])
+            ->where('check_out_date', '>=', now())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['success' => true, 'bookings' => $bookings]);
+    }
+
+    // الطلبات السابقة
+    public function tenantPast()
+    {
+        $tenantId = Auth::id();
+
+        $bookings = Booking::where('user_id', $tenantId)
+            ->where('check_out_date', '<', now())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['success' => true, 'bookings' => $bookings]);
+    }
+
+    // الطلبات الملغية
+    public function tenantCancelled()
+    {
+        $tenantId = Auth::id();
+
+        $bookings = Booking::where('user_id', $tenantId)
+            ->whereIn('booking_status', ['cancelled', 'rejected'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['success' => true, 'bookings' => $bookings]);
+    }
 }

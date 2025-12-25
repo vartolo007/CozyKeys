@@ -18,12 +18,13 @@ class ApartmentReviewController extends Controller
 
 
         if ($booking->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'غير مسموح'], 403);
+            return response()->json(['message' => 'Not Allowed'], 403);
         }
 
-        if ($booking->check_out_date > now()) {
-            return response()->json(['message' => 'You cannot leave a review before the booking ends'], 400);
+        if ($booking->check_out_date > now() && $booking->booking_status !== 'cancelled') {
+            return response()->json(['message' => 'You cannot leave a review before the booking ends or cancellation'], 400);
         }
+
 
         $review = ApartmentReview::create([
             'user_id' => $request->user()->id,
