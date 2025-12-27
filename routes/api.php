@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ApartmentReviewController;
+use App\Http\Controllers\FavoriteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -84,4 +85,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //الطلبات الملغية
     Route::get('/tenant/bookings/cancelled', [BookingController::class, 'tenantCancelled']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    // إضافة شقة إلى المفضلة
+    Route::post('/favorites/{apartmentId}', [FavoriteController::class, 'addToFavorites']);
+
+    // إزالة شقة من المفضلة
+    Route::delete('/favorites/{apartmentId}', [FavoriteController::class, 'removeFromFavorites']);
+
+    // عرض قائمة المفضلة للمستخدم
+    Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 });
