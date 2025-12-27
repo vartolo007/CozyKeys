@@ -88,13 +88,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    // تبديل حالة المفضلة (إضافة أو إزالة)
+    Route::post('/favorites/toggle/{apartmentId}', [FavoriteController::class, 'toggleFavorite']);
 
-    // إضافة شقة إلى المفضلة
-    Route::post('/favorites/{apartmentId}', [FavoriteController::class, 'addToFavorites']);
-
-    // إزالة شقة من المفضلة
-    Route::delete('/favorites/{apartmentId}', [FavoriteController::class, 'removeFromFavorites']);
-
-    // عرض قائمة المفضلة للمستخدم
+    // عرض قائمة المفضلة
     Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 });
