@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 class FavoriteController extends Controller
 {
     //تبديل حالة المفضلة (إضافة أو إزالة)
-
     public function toggleFavorite(Request $request, $apartmentId)
     {
         $user = $request->user();
@@ -40,13 +39,12 @@ class FavoriteController extends Controller
     }
 
     // عرض قائمة المفضلة للمستخدم
-
     public function getFavorites(Request $request)
     {
         $user = $request->user();
 
         $favorites = Favorite::where('user_id', $user->id)
-            ->with('apartment') // جلب بيانات الشقة المرتبطة
+            ->with('apartment')
             ->get();
 
         return response()->json([
