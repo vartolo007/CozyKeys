@@ -45,7 +45,7 @@ class ApartmentController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => '  login first'
+                'message' => 'login first'
             ], 401);
         }
 
@@ -57,6 +57,7 @@ class ApartmentController extends Controller
             ], 403);
         }
 
+        // الفاليديشن لقبول مصفوفة صور
         $request->validate([
             'city_id' => 'required|exists:cities,id',
             'description' => 'required|string',
@@ -64,28 +65,42 @@ class ApartmentController extends Controller
             'size' => 'required|string',
             'num_of_rooms' => 'required|integer',
             'price' => 'required|integer',
-            'apartment_images' => 'required|image|mimes:jpg,jpeg,png|max:4096',
+            'apartment_images' => 'required',
+            'apartment_images.*' => 'image|mimes:jpg,jpeg,png|max:4096',
         ]);
 
+        // تخزين الصور كلها
+        $imageUrls = [];
+        if ($request->hasFile('apartment_images')) {
+            foreach ($request->file('apartment_images') as $image) {
+                $path = $image->store('apartment', 'public');
+                $imageUrls[] = asset('storage/' . $path);
+            }
+        }
 
+        // إنشاء الشقة وتخزين روابط الصور كـ JSON
         $apartment = Apartment::create([
-            'user_id' => auth::user()->id,
+            'user_id' => $user->id,
             'city_id' => $request->city_id,
             'description' => $request->description,
             'address' => $request->address,
             'size' => $request->size,
             'num_of_rooms' => $request->num_of_rooms,
             'price' => $request->price,
-            'apartment_images' =>'http://127.0.0.1:8000/storage/'. $request->file('apartment_images')->store('apartment', 'public'),
+            'apartment_images' => json_encode($imageUrls),
             'apartment_status' => 'available',
         ]);
+
+        // فك التشفير واستبدال القيمة داخل الـ object
+        $apartment->apartment_images = json_decode($apartment->apartment_images, true);
 
         return response()->json([
             'success' => true,
             'data' => $apartment,
-            'message' => 'added suscessfully'
+            'message' => 'added successfully'
         ], 201);
     }
+
 
     public function filterApartments(Request $request)
     {
@@ -93,16 +108,19 @@ class ApartmentController extends Controller
             ->where('apartment_status', 'available')
             ->with('city');
 
+        // فلترة حسب المحافظة
         if ($request->filled('gov_id')) {
             $query->whereHas('city', function ($q) use ($request) {
                 $q->where('gov_id', $request->gov_id);
             });
         }
 
+        // فلترة حسب المدينة
         if ($request->filled('city_id')) {
             $query->where('city_id', $request->city_id);
         }
 
+        // فلترة حسب السعر
         if ($request->filled('min_price') && $request->filled('max_price')) {
             $query->whereBetween('price', [
                 $request->min_price,
@@ -110,11 +128,11 @@ class ApartmentController extends Controller
             ]);
         }
 
+        // فلترة حسب الحجم
         if ($request->filled('size')) {
-            foreach ($request->size as $size) {
-                $query->whereJsonContains('size', $size);
-            }
+            $query->where('size', $request->input('size'));
         }
+
 
         $apartments = $query->get([
             'id',
