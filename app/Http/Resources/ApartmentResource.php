@@ -17,9 +17,10 @@ class ApartmentResource extends JsonResource
             'rooms'            => (int) $this->num_of_rooms,
             'price'            => (float) $this->price,
             'status'           => $this->apartment_status,
-            'image' => $this->apartment_images
-                ? asset('http://127.0.0.1:8000/storage/' . $this->apartment_images)
-                : null,
+            'images' => $this->apartment_images
+                ? json_decode($this->apartment_images, true)
+                : [],
+
             'owner' => [
                 'id'   => $this->owner->id,
                 'name' => trim($this->owner->first_name . ' ' . $this->owner->last_name),
